@@ -1,0 +1,25 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gueskbook
+  namespace: traefik
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`www.guestbook.obara.dev`)
+      kind: Rule
+      services:
+        - name: helm-guestbook
+          port: 80
+    - match: Host(`guestbook.obara.dev`)
+      kind: Rule
+      services:
+        - name: helm-guestbook
+          port: 80
+      middlewares:
+        - name: default-headers
+  tls:
+    secretName: obara-dev-tls
